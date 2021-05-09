@@ -1,0 +1,69 @@
+%% Load dat
+tic
+load('BlogCatalog.mat')    
+lambda = 0.91; % the regularization parameter 
+rho = 4; % the penalty parameter  =6??????????=5     
+%load('Flickr.mat')
+%lambda = 1; % the regularization parameter  
+%rho = 7; % the penalty parameter     
+%load('citeseer44.mat')    
+%lambda = 0.1; % the regularization parameter  
+%rho =3; % the penalty parameter  
+%load('cora55.mat')    
+%lambda =  0.85 ; % the regularization parameter 
+%rho = 2; % the penalty parameter  
+
+
+
+
+
+%load('ACM.mat')
+%lambda = 0.001; %  
+%rho = 10; 
+%Attributes=Features;
+
+
+%% Experimental Settings
+d = 100; % the dimension of the embedding representation
+G = Network; % the weighted adjacency matrix
+A = Attributes;%Features;%Attributes; % the attribute information matrix with row denotes nodes
+%A=A;
+%% Accelerated Attributed Network Embedding
+
+%H = AANE_fun(sparse(CombG),sparse(CombA),d,lambda,rho);
+H = AANE_fun(G,A,d,lambda,rho);%lambda,rho
+%save ACMh1.58.mat H;
+%%????????????????
+%[q,Idx] = means(H,G);
+%q
+%toc
+
+%tic
+Idx = kmeans(H,6,'dist','cosine'); %kmeans???? cosine 
+
+%% dataSet=H;
+%dataSet=dataSet/max(max(abs(dataSet)));
+%num_clusters=6;
+%sigma=0.1;
+%Z=pdist(dataSet);
+%W=squareform(Z);
+%C = spectral(W,sigma, num_clusters);
+%toc
+
+
+L = Label';
+I = Idx';
+[FMeasure,Accuracy] = Fmeasure(L,I);
+FMeasure
+
+
+
+EvaluateValue = ClusterEvaluateIndex(Idx, Label);
+
+
+nmi=EvaluateValue(1,4);
+nmi
+acc=EvaluateValue(1,6);
+acc
+
+toc
